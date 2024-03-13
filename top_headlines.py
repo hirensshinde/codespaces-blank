@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import ssl
 import nltk
 import pyttsx3
+from time import sleep
 # try:
 #     _create_unverified_https_context = ssl._create_unverified_context
 # except AttributeError:
@@ -17,6 +18,16 @@ import nltk.sentiment.vader as vader
 url = "https://news.google.com/search?q=technology&hl=en"
 
 engine = pyttsx3.init()
+
+""" RATE"""
+rate = engine.getProperty('rate')  # getting details of current speaking rate
+print(rate)  # printing 
+engine.setProperty('rate', 170)
+
+voices = engine.getProperty('voices')  # getting details of current voice
+# engine.setProperty('voice', voices[5].id)  #changing index, changes voices. o for male
+# engine.setProperty('voice', voices[0].id)  # changing index, changes voices. 1 for female
+
 
 # Send request and get response
 response = requests.get(url)
@@ -39,11 +50,12 @@ if response.status_code == 200:
 
     # Print title, sentiment score, and classification
     print(f"{i+1}. {title.text.strip()}")
-    print(f"  * Sentiment Score: {sentiment['compound']}")
-    print(f"  * Classification: {max(sentiment, key=sentiment.get)}")
+    # print(f"  * Sentiment Score: {sentiment['compound']}")
+    # print(f"  * Classification: {max(sentiment, key=sentiment.get)}")
 
     # Speak the headline (optional)
     engine.say(title.text.strip())
+    sleep(0.5)
     engine.runAndWait()
     # tts.speak(title.text.strip())
 else:
